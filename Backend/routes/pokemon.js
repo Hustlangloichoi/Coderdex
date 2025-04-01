@@ -27,11 +27,12 @@ const pokemonTypes = [
   "rock",
   "water",
 ];
+
+const fileData = JSON.parse(fs.readFileSync(dbFile, "utf8"));
+let pokemons = fileData.data;
+
 router.get("/", async (req, res, next) => {
   try {
-    const fileData = JSON.parse(fs.readFileSync(dbFile, "utf8"));
-    let pokemons = fileData.data;
-
     //define schema for validation
     const requestQuerySchema = z.object({
       name: z.string().optional(),
@@ -42,7 +43,7 @@ router.get("/", async (req, res, next) => {
 
     // validate by defined schema + safeParse (not throw error by default --> be able to customize how to handle error)
     const result = requestQuerySchema.safeParse(req.query);
-    //handle error
+    // handle error
     if (!result.success) {
       return res.status(400).json({
         message: "BAD REQUEST",
@@ -74,6 +75,13 @@ router.get("/", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+router.get("/", async (res, req, next) => {
+  // define schema for validation
+  // validate by defined schema + safeParse (not throw error by default --> be able to customize how to handle error)
+  // handle error
+  // response logic
 });
 
 module.exports = router;
